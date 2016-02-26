@@ -7,4 +7,4 @@ Copy the include/can_encode_decode.inl into your c++ project and use the inline 
 
 ## Run tests
 
-`./run_tests.sh`
+`./run_test.sh`
