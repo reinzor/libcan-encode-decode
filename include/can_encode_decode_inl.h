@@ -1,5 +1,5 @@
-#ifndef CAN_FRAME_ENCODE_DECODE_INL_H_
-#define CAN_FRAME_ENCODE_DECODE_INL_H_
+#ifndef CAN_ENCODE_DECODE_INL_H_
+#define CAN_ENCODE_DECODE_INL_H_
 
 #include <stdint.h> //uint typedefinitions, non-rtw!
 
