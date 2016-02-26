@@ -35,7 +35,7 @@ int main()
 {
     tic();
 
-    // Encode test 1
+    // Decode test 1 (big endian unsigned)
     {
         uint64_t src = 0x182000110008d;
         uint8_t src_array[8] = {141, 0, 16, 1, 0, 130, 1, 0};
@@ -74,7 +74,7 @@ int main()
         TEST(decode(src_array, 62, 2, true, false, 1.000000, 0), 0.000000);
     }
 
-    // Encode test 2
+    // Decode test 2 (little endian, signed and unsigned)
     {
         // src, startbit, bitlength, is_big_endian, is_signed, factor, offset, name, value
         uint8_t src_array[8] = {12, 0, 5, 112, 3, 205, 31, 131};
