@@ -35,7 +35,7 @@ void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, const u
 
     value &= MASK64(length);
 
-    frame[start_byte] |= value >> startbit_in_byte;
+    frame[start_byte] |= value << startbit_in_byte
     if(is_big_endian) // Motorola (big endian)
     {
         end_byte = (start_byte * 8 + 8 - startbit_in_byte - length) / 8;
