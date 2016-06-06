@@ -26,13 +26,15 @@ void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, const u
     int8_t count = 0;
     uint8_t current_target_length = (8-startbit_in_byte);
 
-    //! TODO: Deal with sign
     if (is_signed)
     {
-        // perform sign extension
-        // update value
+        uint64_t signal_value;
+        // Save signal to be extended
+        // perform sign extension and update value
+        signal_value = value & 0x8000000000000000;
+        value |= signal_value >> (64 - length);
     }
-
+        
     value &= MASK64(length);
 
     frame[start_byte] |= value << startbit_in_byte
