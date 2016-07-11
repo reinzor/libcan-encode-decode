@@ -118,6 +118,21 @@ int main()
         TEST(decode(src_array, 0, 8, false, false, 1.000000, 0), 12.000000);
     }
 
+    // Encode decode test
+    {
+        // src, startbit, bitlength, is_big_endian, is_signed, factor, offset, name, value
+        uint8_t src_array[8];
+
+        encode(src_array, 3.0, 56, 3, false, false, 1.000000, 0);
+        TEST(decode(src_array, 56, 3, false, false, 1.000000, 0), 3.000000);
+
+        encode(src_array, 35, 2, 6, true, false, 1.0, 0);
+        TEST(decode(src_array, 2, 6, true, false, 1.000000, 0), 35.000000);
+
+        encode(src_array, 1.0, 0, 2, true, false, 1.0, 0);
+        TEST(decode(src_array, 0, 2, true, false, 1.000000, 0), 1.000000);
+    }
+
     toc();
 }
 

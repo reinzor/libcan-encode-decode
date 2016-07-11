@@ -34,7 +34,7 @@ void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, const u
         signal_value = value & 0x8000000000000000;
         value |= signal_value >> (64 - length);
     }
-        
+
     value &= MASK64(length);
 
     frame[start_byte] |= value << startbit_in_byte;
@@ -87,7 +87,7 @@ inline uint64_t extractSignal(const uint8_t* frame, const uint8_t startbit, cons
             target |= frame[count] << current_target_length;
             current_target_length += 8;
         }
-    }    
+    }
 
     target &= MASK64(length);
 
@@ -104,6 +104,11 @@ inline uint64_t extractSignal(const uint8_t* frame, const uint8_t startbit, cons
 inline float decode(const uint8_t* frame, const uint16_t startbit, const uint16_t length, bool is_big_endian, bool is_signed, float factor, float offset)
 {
     return toPhysicalValue(extractSignal(frame, startbit, length, is_big_endian, is_signed), factor, offset, is_signed);
+}
+
+inline void encode(uint8_t* frame, const float value, const uint16_t startbit, const uint16_t length, bool is_big_endian, bool is_signed, float factor, float offset)
+{
+    storeSignal(frame, fromPhysicalValue(value, factor, offset), startbit, length, is_big_endian, is_signed);
 }
 
 #endif
