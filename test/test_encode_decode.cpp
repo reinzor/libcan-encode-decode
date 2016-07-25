@@ -131,6 +131,9 @@ int main()
 
         encode(src_array, 1.0, 0, 2, true, false, 1.0, 0);
         TEST(decode(src_array, 0, 2, true, false, 1.000000, 0), 1.000000);
+
+        encode(src_array, -1.0, 0, 2, true, false, 1.0, 0);
+        TEST(decode(src_array, 0, 2, true, false, 1.000000, 0), -1.000000);
     }
 
     toc();
