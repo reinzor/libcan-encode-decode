@@ -1,0 +1,4 @@
+dist: trusty
+language: generic
+script:
+  - source run_tests.sh
