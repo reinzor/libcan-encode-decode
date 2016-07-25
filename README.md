@@ -1,4 +1,7 @@
 # libcan-encode-decode
+
+[![Build Status](https://travis-ci.org/reinzor/libcan-encode-decode.svg?branch=master)](https://travis-ci.org/reinzor/libcan-encode-decode)
+
 C++ functions for encoding and decoding CAN frames ( uint8_t[8] )
 
 ## Usage
