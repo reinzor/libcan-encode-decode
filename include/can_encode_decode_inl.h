@@ -2,8 +2,6 @@
 #define CAN_ENCODE_DECODE_INL_H_
 
 #include <stdint.h> //uint typedefinitions, non-rtw!
-#include <iostream>
-#include <bitset>
 
 #define MASK64(nbits) ((0xffffffffffffffff)>> (64-nbits))
 
