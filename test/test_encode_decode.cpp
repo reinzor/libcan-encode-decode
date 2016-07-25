@@ -123,6 +123,9 @@ int main()
         // src, startbit, bitlength, is_big_endian, is_signed, factor, offset, name, value
         uint8_t src_array[8];
 
+        encode(src_array, -1.0, 24, 12, false, true, 0.010000, 0.000000); 
+        TEST(decode(src_array, 24, 12, false, true, 0.010000, 0.000000), -1.0); 
+
         encode(src_array, 3.0, 56, 3, false, false, 1.000000, 0);
         TEST(decode(src_array, 56, 3, false, false, 1.000000, 0), 3.000000);
 
@@ -131,9 +134,6 @@ int main()
 
         encode(src_array, 1.0, 0, 2, true, false, 1.0, 0);
         TEST(decode(src_array, 0, 2, true, false, 1.000000, 0), 1.000000);
-
-        encode(src_array, -1.0, 0, 2, true, false, 1.0, 0);
-        TEST(decode(src_array, 0, 2, true, false, 1.000000, 0), -1.000000);
     }
 
     toc();
