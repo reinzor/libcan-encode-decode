@@ -18,7 +18,7 @@ inline uint64_t fromPhysicalValue(float physical_value, float factor, float offs
     return (physical_value - offset) / factor;
 }
 
-void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, const uint8_t length, bool is_big_endian, bool is_signed)
+inline void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, const uint8_t length, bool is_big_endian, bool is_signed)
 {
     uint8_t start_byte = startbit / 8;
     uint8_t startbit_in_byte = startbit % 8;
