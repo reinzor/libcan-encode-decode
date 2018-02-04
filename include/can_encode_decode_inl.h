@@ -2,6 +2,8 @@
 #define CAN_ENCODE_DECODE_INL_H_
 
 #include <stdint.h>  //uint typedefinitions, non-rtw!
+#include <assert.h>
+#include <math.h>
 
 #define MASK64(nbits) ((0xffffffffffffffff) >> (64 - nbits))
 
@@ -103,6 +105,8 @@ inline uint64_t extractSignal(const uint8_t* frame, const uint8_t startbit, cons
   return target;
 }
 
+// For Vector CAN DB files https://vector.com/vi_candb_en.html
+
 inline float decode(const uint8_t* frame, const uint16_t startbit, const uint16_t length, bool is_big_endian,
                     bool is_signed, float factor, float offset)
 {
@@ -113,6 +117,43 @@ inline void encode(uint8_t* frame, const float value, const uint16_t startbit, c
                    bool is_big_endian, bool is_signed, float factor, float offset)
 {
   storeSignal(frame, fromPhysicalValue(value, factor, offset), startbit, length, is_big_endian, is_signed);
+}
+
+// Texas instruments IQ notation https://en.wikipedia.org/wiki/Q_(number_format)
+
+inline double extractIQ(const uint8_t* frame, uint8_t start, uint8_t length, uint8_t float_length, bool is_big_endian,
+                        bool is_signed)
+{
+  assert(is_big_endian == false);
+
+  uint8_t int_start = start + float_length;
+  uint8_t int_length = length - float_length;
+
+  int64_t int_part = int_length > 0 ? extractSignal(frame, int_start, int_length, is_big_endian, is_signed) : 0;
+  uint64_t float_part = float_length > 0 ? extractSignal(frame, start, float_length, is_big_endian, false) : 0;
+
+  return (fabs(int_part) / int_part) * (fabs(int_part) + float_part * pow(2, -float_length));
+}
+
+inline void storeIQ(uint8_t* frame, double value, uint8_t start, uint8_t length, uint8_t float_length,
+                    bool is_big_endian, bool is_signed)
+{
+  assert(is_big_endian == false);
+
+  uint8_t int_start = start + float_length;
+  uint8_t int_length = length - float_length;
+
+  if (int_length > 0)
+  {
+    int64_t int_part = int(value);
+    storeSignal(frame, int_part, int_start, int_length, is_big_endian, is_signed);
+  }
+
+  if (float_length > 0)
+  {
+    int64_t float_part = (fabs(value) - int(fabs(value))) * pow(2, float_length);
+    storeSignal(frame, float_part, start, float_length, is_big_endian, false);
+  }
 }
 
 #endif

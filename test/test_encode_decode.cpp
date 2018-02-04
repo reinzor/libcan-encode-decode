@@ -23,10 +23,10 @@ void toc()
   tictoc_stack.pop();
 }
 
-inline void TEST(float k, float v)
+inline void TEST(float k, float v, float eps = 0.01)
 {
   num_tests++;
-  bool near = (k >= v - 0.01 && k <= v + 0.01);
+  bool near = (k >= v - eps && k <= v + eps);
   if (!near)
   {
     std::cerr << "Expected " << v << " but got " << k << std::endl;
@@ -72,6 +72,14 @@ inline void TEST_ENCODE_DECODE(float value, unsigned int startbit, unsigned int 
   encode(src_array, value, startbit, length, is_big_endian, is_signed, factor, offset);
 
   TEST(decode(src_array, startbit, length, is_big_endian, is_signed, factor, offset), value);
+}
+
+inline void TEST_IQ_STORE_EXTRACT(float value, unsigned int startbit, unsigned int length, unsigned int float_length,
+                                  bool is_big_endian, bool is_signed)
+{
+  uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+  storeIQ(src_array, value, startbit, length, float_length, is_big_endian, is_signed);
+  TEST(extractIQ(src_array, startbit, length, float_length, is_big_endian, is_signed), value);
 }
 
 int main()
@@ -194,6 +202,16 @@ int main()
     TEST_ENCODE_DECODE(1.0, 0, 2, true, false, 1.0, 0);
 
     TEST_ENCODE_DECODE(1.0, 62, 24, true, true, 0.1, 20);
+  }
+
+  // IQ notations store extract (little endian only)
+  {
+    TEST_IQ_STORE_EXTRACT(-1.0, 0, 7, 3, false, true);
+    TEST_IQ_STORE_EXTRACT(-8.25, 0, 16, 8, false, true);
+    TEST_IQ_STORE_EXTRACT(3.0, 56, 3, 0, false, false);
+    TEST_IQ_STORE_EXTRACT(8.32, 2, 16, 8, false, false);
+    TEST_IQ_STORE_EXTRACT(1.0, 0, 2, 0, false, false);
+    TEST_IQ_STORE_EXTRACT(1.6, 0, 24, 8, false, true);
   }
 
   toc();
