@@ -214,5 +214,21 @@ int main()
     TEST_IQ_STORE_EXTRACT(1.6, 0, 24, 8, false, true);
   }
 
+  // Encoding with non-zero source array
+  {
+    uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    int number = 11465;
+    encode(src_array, number, 16, 16, false, false, 0.5, 0);
+    TEST(number, decode(src_array, 16, 16, false, false, 0.5, 0));
+
+    number = 3;
+    encode(src_array, number, 15, 3, false, false, 0.5, 0);
+    TEST(number, decode(src_array, 15, 3, false, false, 0.5, 0));
+
+    number = 11768;
+    encode(src_array, number, 16, 16, false, false, 0.5, 0);
+    TEST(number, decode(src_array, 16, 16, false, false, 0.5, 0));
+  }
+
   toc();
 }
