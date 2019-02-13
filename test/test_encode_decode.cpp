@@ -229,6 +229,7 @@ int main()
     encode(src_array, number, 16, 16, false, false, 0.5, 0);
     TEST(number, decode(src_array, 16, 16, false, false, 0.5, 0));
 
+    // Clearing after within byte
     number = 15;
     encode(src_array, number, 0, 4, false, false, 1.0, 0);
     TEST(number, decode(src_array, 0, 4, false, false, 1.0, 0));
@@ -238,12 +239,70 @@ int main()
     TEST(second_number, decode(src_array, 4, 4, false, false, 1.0, 0));
     TEST(number, decode(src_array, 0, 4, false, false, 1.0, 0));
 
+    // Clearing before within byte
     encode(src_array, number, 4, 4, false, false, 1.0, 0);
     TEST(number, decode(src_array, 4, 4, false, false, 1.0, 0));
 
     encode(src_array, second_number, 0, 4, false, false, 1.0, 0);
     TEST(second_number, decode(src_array, 0, 4, false, false, 1.0, 0));
     TEST(number, decode(src_array, 4, 4, false, false, 1.0, 0));
+  }
+
+  {
+    uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    // Clearing after over bytes
+    int number = 4095;
+    int second_number = 0;
+
+    encode(src_array, number, 0, 12, false, false, 1.0, 0);
+    TEST(number, decode(src_array, 0, 12, false, false, 1.0, 0));
+
+    encode(src_array, second_number, 12, 4, false, false, 1.0, 0);
+    TEST(second_number, decode(src_array, 12, 4, false, false, 1.0, 0));
+    TEST(number, decode(src_array, 0, 12, false, false, 1.0, 0));
+  }
+
+  {
+    uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    // Clearing after over byte
+    int number = 15;
+    int second_number = 0;
+    encode(src_array, number, 12, 4, false, false, 1.0, 0);
+    TEST(number, decode(src_array, 12, 4, false, false, 1.0, 0));
+
+    encode(src_array, second_number, 0, 12, false, false, 1.0, 0);
+    TEST(second_number, decode(src_array, 0, 12, false, false, 1.0, 0));
+    TEST(number, decode(src_array, 12, 4, false, false, 1.0, 0));
+  }
+
+  {
+    uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    // Clearing over bytes
+    int number = 255;
+    int second_number = 15;
+
+    encode(src_array, number, 4, 8, false, false, 1.0, 0);
+    encode(src_array, second_number, 0, 4, false, false, 1.0, 0);
+    encode(src_array, second_number, 12, 4, false, false, 1.0, 0);
+    TEST(number, decode(src_array, 4, 8, false, false, 1.0, 0));
+  }
+
+  {
+    uint8_t src_array[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    // Clearing over bytes
+    int number = 255;
+    int second_number = 15;
+
+    encode(src_array, second_number, 0, 4, false, false, 1.0, 0);
+    encode(src_array, second_number, 12, 4, false, false, 1.0, 0);
+
+    encode(src_array, number, 4, 8, false, false, 1.0, 0);
+    TEST(second_number, decode(src_array, 0, 4, false, false, 1.0, 0));
+    TEST(second_number, decode(src_array, 12, 4, false, false, 1.0, 0));
   }
 
   toc();

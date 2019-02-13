@@ -23,10 +23,10 @@ inline uint64_t fromPhysicalValue(float physical_value, float factor, float offs
 
 inline void clearBits(uint8_t* target_byte, uint8_t* bits_to_clear, const uint8_t startbit, const uint8_t length)
 {
-  for (uint8_t i = startbit; i < length; ++i)
+  for (uint8_t i = startbit; i < length + startbit; ++i)
   {
     *target_byte &= ~(1UL << i);
-    bits_to_clear -= 1;
+    *bits_to_clear -= 1;
   }
 }
 
