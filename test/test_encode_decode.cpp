@@ -228,6 +228,22 @@ int main()
     number = 11768;
     encode(src_array, number, 16, 16, false, false, 0.5, 0);
     TEST(number, decode(src_array, 16, 16, false, false, 0.5, 0));
+
+    number = 15;
+    encode(src_array, number, 0, 4, false, false, 1.0, 0);
+    TEST(number, decode(src_array, 0, 4, false, false, 1.0, 0));
+
+    int second_number = 0;
+    encode(src_array, second_number, 4, 4, false, false, 1.0, 0);
+    TEST(second_number, decode(src_array, 4, 4, false, false, 1.0, 0));
+    TEST(number, decode(src_array, 0, 4, false, false, 1.0, 0));
+
+    encode(src_array, number, 4, 4, false, false, 1.0, 0);
+    TEST(number, decode(src_array, 4, 4, false, false, 1.0, 0));
+
+    encode(src_array, second_number, 0, 4, false, false, 1.0, 0);
+    TEST(second_number, decode(src_array, 0, 4, false, false, 1.0, 0));
+    TEST(number, decode(src_array, 4, 4, false, false, 1.0, 0));
   }
 
   toc();

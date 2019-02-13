@@ -21,11 +21,12 @@ inline uint64_t fromPhysicalValue(float physical_value, float factor, float offs
   return (physical_value - offset) / factor;
 }
 
-inline void clearBits(uint8_t* target_byte, const uint8_t startbit, const uint8_t length)
+inline void clearBits(uint8_t* target_byte, uint8_t* bits_to_clear, const uint8_t startbit, const uint8_t length)
 {
-  for (uint8_t i = startbit; i <= length; ++i)
+  for (uint8_t i = startbit; i < length; ++i)
   {
     *target_byte &= ~(1UL << i);
+    bits_to_clear -= 1;
   }
 }
 
@@ -43,8 +44,7 @@ inline void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, 
   value &= MASK64(length);
 
   // Write bits of startbyte
-  clearBits(&frame[start_byte], startbit_in_byte, current_target_length > length ? length : current_target_length);
-  bits_to_clear -= current_target_length;
+  clearBits(&frame[start_byte], &bits_to_clear, startbit_in_byte, current_target_length > length ? length : current_target_length);
   frame[start_byte] |= value << startbit_in_byte;
 
   // Write residual bytes
@@ -54,8 +54,7 @@ inline void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, 
 
     for (count = start_byte - 1; count >= end_byte; count--)
     {
-      clearBits(&frame[count], 0, bits_to_clear >= 8 ? 8 : bits_to_clear);
-      bits_to_clear -= 8;
+      clearBits(&frame[count], &bits_to_clear, 0, bits_to_clear >= 8 ? 8 : bits_to_clear);
       frame[count] |= value >> current_target_length;
       current_target_length += 8;
     }
@@ -66,8 +65,7 @@ inline void storeSignal(uint8_t* frame, uint64_t value, const uint8_t startbit, 
 
     for (count = start_byte + 1; count <= end_byte; count++)
     {
-      clearBits(&frame[count], 0, bits_to_clear >= 8 ? 8 : bits_to_clear);
-      bits_to_clear -= 8;
+      clearBits(&frame[count], &bits_to_clear, 0, bits_to_clear >= 8 ? 8 : bits_to_clear);
       frame[count] |= value >> current_target_length;
       current_target_length += 8;
     }
