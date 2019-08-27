@@ -18,7 +18,7 @@ inline float toPhysicalValue(uint64_t target, float factor, float offset, bool i
 
 inline uint64_t fromPhysicalValue(float physical_value, float factor, float offset)
 {
-  return (physical_value - offset) / factor;
+  return (int64_t)((physical_value - offset) / factor);
 }
 
 inline void clearBits(uint8_t* target_byte, uint8_t* bits_to_clear, const uint8_t startbit, const uint8_t length)
